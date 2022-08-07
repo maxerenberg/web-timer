@@ -171,8 +171,9 @@ document.getElementById('start-stop-button').addEventListener('click', function 
     timerIsRunning = !timerIsRunning;
 });
 document.getElementById('reset-button').addEventListener('click', function () {
-    if (intervalID !== null) {
+    if (timerIsRunning) {
         stopTimer();
+        timerIsRunning = false;
     }
     setInputValue(secondsInput, '');
     setInputValue(minutesInput, '');
