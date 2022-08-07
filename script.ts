@@ -147,7 +147,9 @@ window.addEventListener('load', function() {
 // TIMER HANDLING
 ////////////////////////////////////////////////////////////////////////////////
 const audioElement = document.querySelector('audio')!;
+const volumeButton = document.getElementById('volume-button') as HTMLButtonElement;
 const volumeButtonImg = document.querySelector('#volume-button img') as HTMLImageElement;
+const notificationButton = document.getElementById('notification-button') as HTMLButtonElement;
 const notificationButtonImg = document.querySelector('#notification-button img') as HTMLImageElement;
 let origSecondsValue = '';
 let origMinutesValue = '';
@@ -185,15 +187,19 @@ document.getElementById('reset-button')!.addEventListener('click', function() {
   secondsInput.focus();
 })
 
-document.getElementById('volume-button')!.addEventListener('click', onVolumeButtonClick);
+volumeButton.addEventListener('click', onVolumeButtonClick);
 function onVolumeButtonClick() {
   let src = '';
+  let title = ''
   if (soundEnabled) {
     src = 'assets/volume-mute-fill.svg';
+    title = 'Enable the alarm sound';
   } else {
     src = 'assets/volume-up-fill.svg';
+    title = 'Disable the alarm sound';
   }
   volumeButtonImg.src = src;
+  volumeButton.title = title;
   soundEnabled = !soundEnabled;
   localStorage.setItem('soundEnabled', String(soundEnabled));
   if (timerIsRunning && intervalID === null) {
@@ -206,9 +212,10 @@ function onVolumeButtonClick() {
   }
 }
 
-document.getElementById('notification-button')!.addEventListener('click', onNotificationButtonClick);
+notificationButton.addEventListener('click', onNotificationButtonClick);
 async function onNotificationButtonClick() {
   let src = '';
+  let title = '';
   if (!notificationsEnabled) {
     if (Notification.permission !== 'granted') {
       const result = await Notification.requestPermission();
@@ -217,10 +224,13 @@ async function onNotificationButtonClick() {
       }
     }
     src = 'assets/bell-fill.svg';
+    title = 'Disable notifications';
   } else {
     src = 'assets/bell-slash-fill.svg';
+    title = 'Enable notifications';
   }
   notificationButtonImg.src = src;
+  notificationButton.title = title;
   notificationsEnabled = !notificationsEnabled;
   localStorage.setItem('notificationsEnabled', String(notificationsEnabled));
 }
@@ -328,8 +338,10 @@ function startTimer() {
     seconds--;
     decrementInputs();
     if (seconds <= 0) {
-      clearInterval(intervalID!);
-      intervalID = null;
+      if (intervalID !== null) {
+        clearInterval(intervalID);
+        intervalID = null;
+      }
       startTimerExpirationEffects();
     }
   }, 1000);
