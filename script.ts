@@ -155,9 +155,14 @@ let origHoursValue = '';
 let notification: Notification | null = null;
 let intervalID: number | null = null;
 let timerIsRunning = false;
-// TODO: use localStorage to remember audio and notification settings
 let soundEnabled = true;
+if (localStorage.getItem('soundEnabled') === 'false') {
+  onVolumeButtonClick();
+}
 let notificationsEnabled = false;
+if (localStorage.getItem('notificationsEnabled') === 'true') {
+  onNotificationButtonClick();
+}
 
 document.getElementById('start-stop-button')!.addEventListener('click', function() {
   if (timerIsRunning) {
@@ -179,7 +184,8 @@ document.getElementById('reset-button')!.addEventListener('click', function() {
   secondsInput.focus();
 })
 
-document.getElementById('volume-button')!.addEventListener('click', function() {
+document.getElementById('volume-button')!.addEventListener('click', onVolumeButtonClick);
+function onVolumeButtonClick() {
   let src = '';
   if (soundEnabled) {
     src = 'assets/volume-mute-fill.svg';
@@ -188,6 +194,7 @@ document.getElementById('volume-button')!.addEventListener('click', function() {
   }
   volumeButtonImg.src = src;
   soundEnabled = !soundEnabled;
+  localStorage.setItem('soundEnabled', String(soundEnabled));
   if (timerIsRunning && intervalID === null) {
     // timer expired and user hasn't cleared it yet
     if (soundEnabled) {
@@ -196,9 +203,10 @@ document.getElementById('volume-button')!.addEventListener('click', function() {
       stopSound();
     }
   }
-});
+}
 
-document.getElementById('notification-button')!.addEventListener('click', async function() {
+document.getElementById('notification-button')!.addEventListener('click', onNotificationButtonClick);
+async function onNotificationButtonClick() {
   let src = '';
   if (!notificationsEnabled) {
     if (Notification.permission !== 'granted') {
@@ -213,7 +221,8 @@ document.getElementById('notification-button')!.addEventListener('click', async 
   }
   notificationButtonImg.src = src;
   notificationsEnabled = !notificationsEnabled;
-});
+  localStorage.setItem('notificationsEnabled', String(notificationsEnabled));
+}
 
 function getInputTimeValue(input: HTMLInputElement): number {
   return parseInt(input.value || input.placeholder)!;

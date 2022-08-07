@@ -153,9 +153,14 @@ let origHoursValue = '';
 let notification = null;
 let intervalID = null;
 let timerIsRunning = false;
-// TODO: use localStorage to remember audio and notification settings
 let soundEnabled = true;
+if (localStorage.getItem('soundEnabled') === 'false') {
+    onVolumeButtonClick();
+}
 let notificationsEnabled = false;
+if (localStorage.getItem('notificationsEnabled') === 'true') {
+    onNotificationButtonClick();
+}
 document.getElementById('start-stop-button').addEventListener('click', function () {
     if (timerIsRunning) {
         stopTimer();
@@ -175,7 +180,8 @@ document.getElementById('reset-button').addEventListener('click', function () {
     updateMinutesPlaceholder();
     secondsInput.focus();
 });
-document.getElementById('volume-button').addEventListener('click', function () {
+document.getElementById('volume-button').addEventListener('click', onVolumeButtonClick);
+function onVolumeButtonClick() {
     let src = '';
     if (soundEnabled) {
         src = 'assets/volume-mute-fill.svg';
@@ -185,6 +191,7 @@ document.getElementById('volume-button').addEventListener('click', function () {
     }
     volumeButtonImg.src = src;
     soundEnabled = !soundEnabled;
+    localStorage.setItem('soundEnabled', String(soundEnabled));
     if (timerIsRunning && intervalID === null) {
         // timer expired and user hasn't cleared it yet
         if (soundEnabled) {
@@ -194,8 +201,9 @@ document.getElementById('volume-button').addEventListener('click', function () {
             stopSound();
         }
     }
-});
-document.getElementById('notification-button').addEventListener('click', function () {
+}
+document.getElementById('notification-button').addEventListener('click', onNotificationButtonClick);
+function onNotificationButtonClick() {
     return __awaiter(this, void 0, void 0, function* () {
         let src = '';
         if (!notificationsEnabled) {
@@ -212,8 +220,9 @@ document.getElementById('notification-button').addEventListener('click', functio
         }
         notificationButtonImg.src = src;
         notificationsEnabled = !notificationsEnabled;
+        localStorage.setItem('notificationsEnabled', String(notificationsEnabled));
     });
-});
+}
 function getInputTimeValue(input) {
     return parseInt(input.value || input.placeholder);
 }
