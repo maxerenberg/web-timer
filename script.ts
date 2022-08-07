@@ -336,15 +336,18 @@ function startTimer() {
 }
 
 function stopTimer() {
-  if (intervalID !== null) {
-    clearInterval(intervalID);
+  let timerExpired = intervalID === null;
+  if (!timerExpired) {
+    clearInterval(intervalID!);
     intervalID = null;
   }
   stopTimerExpirationEffects();
-  // restore original values which user specified, if any
-  setInputValue(secondsInput, origSecondsValue);
-  setInputValue(minutesInput, origMinutesValue);
-  setInputValue(hoursInput, origHoursValue);
-  updateMinutesPlaceholder();
+  if (timerExpired) {
+    // restore original values which user specified, if any
+    setInputValue(secondsInput, origSecondsValue);
+    setInputValue(minutesInput, origMinutesValue);
+    setInputValue(hoursInput, origHoursValue);
+    updateMinutesPlaceholder();
+  }
   document.getElementById('start-stop-button')!.textContent = 'START';
 }
