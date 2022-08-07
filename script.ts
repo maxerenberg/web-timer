@@ -149,6 +149,9 @@ window.addEventListener('load', function() {
 const audioElement = document.querySelector('audio')!;
 const volumeButtonImg = document.querySelector('#volume-button img') as HTMLImageElement;
 const notificationButtonImg = document.querySelector('#notification-button img') as HTMLImageElement;
+let origSecondsValue = '';
+let origMinutesValue = '';
+let origHoursValue = '';
 let notification: Notification | null = null;
 let intervalID: number | null = null;
 let timerIsRunning = false;
@@ -300,6 +303,9 @@ function stopTimerExpirationEffects() {
 
 function startTimer() {
   document.getElementById('start-stop-button')!.textContent = 'STOP';
+  origSecondsValue = secondsInput.value;
+  origMinutesValue = minutesInput.value;
+  origHoursValue = hoursInput.value;
   let seconds = getTimerValueSeconds();
   if (seconds <= 0) {
     for (const elem of inputElems) {
@@ -325,7 +331,10 @@ function stopTimer() {
     intervalID = null;
   }
   stopTimerExpirationEffects();
-  // TODO: restore original value which user specified, if any
+  // restore original values which user specified, if any
+  setInputValue(secondsInput, origSecondsValue);
+  setInputValue(minutesInput, origMinutesValue);
+  setInputValue(hoursInput, origHoursValue);
   updateMinutesPlaceholder();
   document.getElementById('start-stop-button')!.textContent = 'START';
 }
