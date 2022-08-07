@@ -2,7 +2,7 @@
 A simple web-based timer which runs completely in the client's browser.
 
 ## Building
-The `script.js` file is generated from `script.ts`:
+If you make changes to `script.ts`, you need to regenerate `script.js`:
 ```
 npm install -g typescript
 tsc
