@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Timer</title>
+  <style>
+    :root {
+      --primary-border-style: 1px solid lightgray;
+      --placeholder-color: rgba(127, 127, 127, 127);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+    main {
+      padding-top: 20vh;
+    }
+    .hcenter {
+      display: flex;
+      justify-content: center;
+    }
+    #timer-container {
+      border: var(--primary-border-style);
+    }
+    #timer-container > div:not(:last-child) {
+      border-bottom: var(--primary-border-style);
+    }
+    #timer-inputs {
+      display: flex;
+      padding: 0.25em 0;
+      border-bottom: 2px solid transparent;
+    }
+    #timer-inputs.timer-inputs-focus {
+      border-bottom: 2px solid dodgerblue;
+    }
+    #timer-inputs input {
+      width: 1.75em;
+      font-size: inherit;
+      text-align: center;
+      border: none;
+      text-align: right;
+      margin-right: 0.1em;
+    }
+    #timer-inputs input:focus {
+      outline: none;
+    }
+    #timer-inputs input::placeholder {
+      color: var(--placeholder-color);
+      opacity: 1;
+    }
+    .time-unit {
+      color: var(--placeholder-color);
+      font-size: 0.5em;
+    }
+    .timer-input-parent {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: baseline;
+    }
+    #timer-container button {
+      font-size: 0.3em;
+      font-weight: bold;
+      border-radius: 4px;
+      border: none;
+    }
+    #timer-container button:hover {
+      cursor: pointer;
+    }
+    button img {
+      /*
+         Browsers add space to the baseline of inline elements by default,
+         which we don't here.
+      */
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    #start-stop-button {
+      margin-right: 1em;
+      background-color: dodgerblue;
+      color: white;
+    }
+    #start-stop-button:hover {
+      background-color: deepskyblue;
+    }
+    #timer-container #reset-button {
+      background-color: white;
+      color: dodgerblue;
+      border: 1px solid gray;
+    }
+    #timer-container #reset-button:hover {
+      background-color: #eee;
+    }
+    #start-stop-button, #reset-button {
+      width: 5em;
+    }
+    #volume-button, #notification-button {
+      background: none;
+      width: 2em;
+      height: 2em;
+    }
+    #volume-button:hover, #notification-button:hover {
+      background-color: lightgray;
+    }
+
+    @media screen and (min-width: 680px) {
+      #timer-container {
+        font-size: 4em;
+      }
+      #timer-container > div {
+        padding: 0.5em 1em;
+      }
+      #timer-container .timer-inputs-padding {
+        padding: 0.5em 2em;
+      }
+      #timer-container button {
+        padding: 0.2em 0.5rem;
+      }
+      #volume-button {
+        margin-right: 0.75em;
+      }
+    }
+    @media screen and (max-width: 680px) {
+      #timer-container {
+        font-size: 3em;
+      }
+      #timer-container > div {
+        padding: 0.5em 0.5em;
+      }
+      #timer-container .timer-inputs-padding {
+        padding: 0.5em 0.5em;
+      }
+      #timer-container button {
+        padding: 0.2em 0.25em;
+      }
+      #volume-button {
+        margin-right: 1.25em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="hcenter">
+      <div id="timer-container">
+        <div class="timer-inputs-padding">
+          <div id="timer-inputs" class="timer-inputs-focus">
+            <!-- We need to use type=text to use the selectionStart property in JS -->
+            <div class="timer-input-parent">
+              <input type="text" id="input-hours" placeholder="00" title="hours"><span class="time-unit" id="time-unit-hours">h</span>
+            </div>
+            <div class="timer-input-parent">
+              <input type="text" id="input-minutes" placeholder="05" title="minutes"><span class="time-unit" id="time-unit-minutes">m</span>
+            </div>
+            <div class="timer-input-parent">
+              <input type="text" id="input-seconds" placeholder="00" title="seconds" autofocus><span class="time-unit" id="time-unit-seconds">s</span>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex;">
+            <button id="start-stop-button">START</button>
+            <button id="reset-button">RESET</button>
+          </div>
+          <div style="display: flex;">
+            <button id="volume-button">
+              <img src="assets/volume-up-fill.svg" alt="Volume icon">
+            </button>
+            <button id="notification-button">
+              <img src="assets/bell-slash-fill.svg" alt="Bell icon">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <audio src="assets/Alarm-ringtone.mp3" loop style="display: none;"></audio>
+  <script src="script.js"></script>
+</body>
+</html>
