@@ -92,13 +92,16 @@ function setCursorPosition(input: HTMLInputElement, pos: number) {
 function inputOnBeforeInput(ev: InputEvent) {
   const input = ev.target as HTMLInputElement;
   if (!ev.data) {
-    // backspace
-    if (input.selectionStart === 0 && input.selectionEnd === 0) {
-      const nextInput = getNextInput(input);
-      if (nextInput !== null) {
-        nextInput.focus();
-        // move cursor position to end
-        setCursorPosition(nextInput, nextInput.value.length);
+    // content was deleted
+    if (ev.inputType === 'deleteContentBackward') {
+      // backspace
+      if (input.selectionStart === 0 && input.selectionEnd === 0) {
+        const nextInput = getNextInput(input);
+        if (nextInput !== null) {
+          nextInput.focus();
+          // move cursor position to end
+          setCursorPosition(nextInput, nextInput.value.length);
+        }
       }
     }
     return;
